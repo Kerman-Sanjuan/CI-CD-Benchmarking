@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Download Repository') {
+            steps {
+
+            git branch: 'main', changelog: false, poll: false, url: 'git@github.com:Kerman-Sanjuan/CI-CD-Benchmarking.git'
+        }
+        }
+        stage('Build Docker Image'){
+            
+            steps{
+                dir('web-app') {
+         sh '/usr/local/bin/docker-compose up -d'
+        }
+
+                    
+        }   
+    }
+        stage('Testing'){
+            steps{
+                dir('test_scripts') {
+                sh './testing.sh'
+                }
+                
+            }
+        }
+    }
+}
