@@ -16,9 +16,9 @@ function testGetMethod()
 
 function testPostMethod()
 {
-    item_number=$(/usr/bin/curl --silent http://localhost:3000 | /usr/bin/grep -o _id | /usr/bin/wc -l)
-    /usr/bin/curl --silent --output /dev/null -X POST $root_uri'item/add' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'name='$1 --data-urlencode 'message='$2
-    new_item_number=$(/usr/bin/curl --silent http://localhost:3000 | /usr/bin/grep -o _id | /usr/bin/wc -l)
+    item_number=$(curl --silent http://localhost:3000 | grep -o _id | wc -l)
+    curl --silent --output /dev/null -X POST $root_uri'item/add' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'name='$1 --data-urlencode 'message='$2
+    new_item_number=$(curl --silent http://localhost:3000 | grep -o _id | wc -l)
     if [ $new_item_number -eq $(($item_number + 1)) ]; then
         echo "POST method is working"
     else
@@ -29,7 +29,7 @@ function testPostMethod()
 
 function testPutMethod()
 {
-    status_code=$(/usr/bin/curl --write-out '%{http_code}' --silent --output /dev/null -X PUT $root_uri'item/put' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'name='$1 --data-urlencode 'message='$2)
+    status_code=$(curl --write-out '%{http_code}' --silent --output /dev/null -X PUT $root_uri'item/put' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'name='$1 --data-urlencode 'message='$2)
     if [ $status_code -eq 204 ]; then
         echo "PUT method is working"
     else
@@ -40,8 +40,8 @@ function testPutMethod()
 
 function testDeleteMethod()
 {
-    /usr/bin/curl --silent --output /dev/null -X DELETE $root_uri'item/delete' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'name='$1
-    new_item_number=$(/usr/bin/curl --silent http://localhost:3000 | /usr/bin/grep -o $1 | /usr/bin/wc -l)
+    curl --silent --output /dev/null -X DELETE $root_uri'item/delete' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'name='$1
+    new_item_number=$(curl --silent http://localhost:3000 | grep -o $1 | wc -l)
     if [ $new_item_number -eq 0 ]; then
         echo "DELETE method is working"
     else
