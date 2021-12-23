@@ -1,17 +1,11 @@
 #!/bin/bash
-
-ip a
-ip addr
-ifconfig
-ping -c 1 http://localhost:3000
-
 echo "Running API testing..."
 
 root_uri="http://localhost:3000/"
 
 function testGetMethod()
 {
-    status_code=$(/usr/bin/curl --write-out '%{http_code}' --silent --output /dev/null $root_uri)
+    status_code=$(/usr/bin/curl -s -o /dev/null -w "%{http_code}" $root_uri)
     if [ $status_code -eq 200 ]; then
         echo "GET method is working"
     else
