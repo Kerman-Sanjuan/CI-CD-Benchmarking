@@ -1,0 +1,41 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Download Repository') {
+      steps {
+
+        git branch: 'main', changelog: false, poll: false, url: 'git@github.com:Kerman-Sanjuan/CI-CD-Benchmarking.git'
+      }
+      }
+      stage('Build Docker Image'){
+
+        steps{
+          dir('web-app') {
+            sh '/usr/local/bin/docker-compose up -d'
+      }
+
+
+      }   
+  }
+  stage('Testing'){
+    steps{
+      dir('test_scripts') {
+        sh './testing.sh'
+        }
+        dir('web-app') {
+          sh '/usr/local/bin/docker-compose down'
+          }
+          }
+      }
+    stage('Deployment') {
+      steps {
+        sshagent(credentials: ['3270e3df-1de2-44c6-bbe0-45a754a71c47']) {
+            sh 'ssh kerman@65.108.145.229 ./deploy.sh'
+      }
+      
+    }
+}
+}
+
+}
